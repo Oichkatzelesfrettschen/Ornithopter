@@ -196,10 +196,19 @@ def verify_attitude_bounds():
         print(f"  Current roll: {m[roll]}")
         print(f"  Current roll_rate: {m[roll_rate]}")
         print(f"  Control torque: {m[tau_roll]}")
-        # Calculate next state
-        r = float(m[roll].as_fraction()) if hasattr(m[roll], 'as_fraction') else 0
-        rr = float(m[roll_rate].as_fraction()) if hasattr(m[roll_rate], 'as_fraction') else 0
-        tr = float(m[tau_roll].as_fraction()) if hasattr(m[tau_roll], 'as_fraction') else 0
+        # Calculate next state - safely extract values from Z3 model
+        def extract_value(z3_val):
+            """Safely extract numeric value from Z3 model value"""
+            if hasattr(z3_val, 'as_fraction'):
+                return float(z3_val.as_fraction())
+            elif hasattr(z3_val, 'as_long'):
+                return float(z3_val.as_long())
+            else:
+                return float(str(z3_val))
+        
+        r = extract_value(m[roll])
+        rr = extract_value(m[roll_rate])
+        tr = extract_value(m[tau_roll])
         ra = tr / I
         nr = r + rr * dt + 0.5 * ra * dt * dt
         print(f"  Next roll: {nr}° (violates bounds)")

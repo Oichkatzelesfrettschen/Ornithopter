@@ -6,10 +6,16 @@ on:
   pull_request:
     branches: [ main, develop ]
 
+# Set minimal permissions for security
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Build Firmware
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
       matrix:
         env: [pico32_release, pico32_debug]
@@ -50,6 +56,8 @@ jobs:
     name: Binary Size Analysis
     runs-on: ubuntu-latest
     needs: build
+    permissions:
+      contents: read
     
     steps:
     - name: Checkout code
@@ -71,6 +79,8 @@ jobs:
   static-analysis:
     name: Static Code Analysis
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
     - name: Checkout code
@@ -104,6 +114,8 @@ jobs:
   formal-verification:
     name: Formal Verification
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
     - name: Checkout code
@@ -118,20 +130,22 @@ jobs:
       run: pip install z3-solver
     
     - name: Run Z3 verification
-      run: python3 docs/formal_verification/verify_control.py
+      run: |
+        python3 docs/formal_verification/verify_control.py | tee verification_results.log
     
     - name: Upload verification results
       uses: actions/upload-artifact@v3
       if: always()
       with:
         name: verification-results
-        path: |
-          docs/formal_verification/*.log
+        path: verification_results.log
         retention-days: 30
 
   documentation:
     name: Generate Documentation
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
     - name: Checkout code
@@ -164,6 +178,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build, static-analysis, formal-verification]
     if: always()
+    permissions:
+      contents: read
     
     steps:
     - name: Create summary

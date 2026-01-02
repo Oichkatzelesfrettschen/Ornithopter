@@ -36,6 +36,7 @@ VARIABLES
     control_output,         \* Control signals to actuators
     sensor_data,            \* Raw sensor readings from IMU
     system_mode,            \* 0: safe, 1: servo-only, 2: full-power
+    requested_mode,         \* Requested mode change
     stable,                 \* Boolean: system stability flag
     sensor_status,          \* Sensor health status
     actuator_status,        \* Actuator health status
@@ -44,7 +45,7 @@ VARIABLES
     clock                   \* System clock (milliseconds)
 
 vars == <<attitude, angular_velocity, control_output, sensor_data, 
-          system_mode, stable, sensor_status, actuator_status,
+          system_mode, requested_mode, stable, sensor_status, actuator_status,
           last_sensor_time, last_control_time, clock>>
 
 -----------------------------------------------------------------------------
@@ -152,6 +153,7 @@ Init ==
                       gyro |-> <<0, 0, 0>>, 
                       mag |-> <<0, 0, 0>>]
     /\ system_mode = 0
+    /\ requested_mode = 0
     /\ stable = TRUE
     /\ sensor_status = TRUE
     /\ actuator_status = TRUE

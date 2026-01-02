@@ -1,8 +1,23 @@
 #ifndef __QUATERNION_MATH_H__
 #define __QUATERNION_MATH_H__
 
+// Use standard C++ headers for portability
+#include <cmath>
+
+// Conditionally include Arduino.h only for embedded targets
+#ifdef ARDUINO
 #include <Arduino.h>
-#include <math.h>
+#else
+#include <cstdio>
+// Define Serial for non-Arduino platforms
+namespace {
+    struct SerialStub {
+        void print(const char* s) { printf("%s", s); }
+        void print(float f, int precision = 2) { printf("%.*f", precision, f); }
+        void println(const char* s) { printf("%s\n", s); }
+    } Serial;
+}
+#endif
 
 /**
  * @file quaternion_math.h
