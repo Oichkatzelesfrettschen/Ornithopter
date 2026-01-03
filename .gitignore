@@ -3,3 +3,42 @@
 .vscode/launch.json
 .vscode/ipch
 .DS_Store
+
+# PlatformIO
+.pio/
+.pioenvs/
+.piolibdeps/
+.clang_complete
+.gcc-flags.json
+
+# Build artifacts
+*.o
+*.a
+*.so
+*.bin
+*.elf
+*.hex
+
+# Documentation build
+docs/html/
+docs/latex/
+docs/xml/
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# OS
+Thumbs.db
+.DS_Store
